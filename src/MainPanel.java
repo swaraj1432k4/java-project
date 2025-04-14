@@ -1,281 +1,3 @@
-// import javax.swing.*;
-// import java.awt.*;
-// import java.awt.event.*;
-
-// public class MainPanel extends JPanel {
-//     private DrawingPanel drawingPanel;
-//     private static final int SCALE = 10; // 1 foot = 10 pixels
-//     private int nextX = 50;
-//     private int nextY = 50;
-//     private static final int GAP = 0; // space between rooms
-//     private static final int MAX_WIDTH = 800; // max width before wrapping
-
-//     private void stylebutton(JButton button) {
-//         button.setBackground(new Color(45, 45, 45));
-//         button.setFont(new Font("SansSerif", Font.PLAIN, 12));
-//         button.setForeground(Color.WHITE);
-//         button.setFocusPainted(false);
-
-//     }
-
-//     public MainPanel() {
-
-//         setLayout(new BorderLayout());
-
-//         // Create buttons
-//         JButton addroom = new JButton("Add Room");
-//         // JButton addfurniture = new JButton("Add Furniture");
-//         JButton saveButton = new JButton("Save");
-//         JButton saveasButton=new JButton("Save As");
-//         JButton loadButton= new JButton("Load");
-//         JPanel buttonpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//         buttonpanel.setBackground(new Color(30, 30, 30));
-//         stylebutton(addroom);
-//         // stylebutton(addfurniture);
-//         stylebutton(saveButton);
-//         stylebutton(loadButton);
-//         stylebutton(saveasButton);
-//         buttonpanel.add(addroom);
-//         buttonpanel.add(saveButton);
-//         buttonpanel.add(saveasButton);
-//         buttonpanel.add(loadButton);
-        
-        
-//         // buttonpanel.add(addfurniture);
-
-//         this.add(buttonpanel, BorderLayout.NORTH);
-
-//         // Create and add drawing panel
-//         drawingPanel = new DrawingPanel();
-//         this.add(drawingPanel, BorderLayout.CENTER);
-
-//         // Add Room button functionality
-//         addroom.addActionListener(e -> openAddRoomDialog());
-//     }
-
-//     private void openAddRoomDialog() {
-//         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Add Room", true);
-//         dialog.setSize(400, 250);
-//         dialog.setLocationRelativeTo(this); // center the dialog
-//         dialog.setLayout(new GridBagLayout());
-//         dialog.setBackground(new Color(30, 30, 30));
-
-//         GridBagConstraints gbc = new GridBagConstraints();
-//         gbc.insets = new Insets(10, 10, 10, 10);
-//         gbc.fill = GridBagConstraints.HORIZONTAL;
- 
-//         // Room Type
-//         JLabel typeLabel = new JLabel("Room Type:");
-//         String[] roomTypes = { "Bedroom", "Bathroom", "Living Room", "Kitchen" };
-//         JComboBox<String> typeBox = new JComboBox<>(roomTypes);
-
-//         // Width
-//         JLabel widthLabel = new JLabel("Width (in ft):");
-//         JTextField widthField = new JTextField();
-
-//         // Length
-//         JLabel lengthLabel = new JLabel("Length (in ft):");
-//         JTextField lengthField = new JTextField();
-
-//         // Submit Button
-//         JButton submitButton = new JButton("Add Room");
-
-//         // Layout
-//         gbc.gridx = 0;
-//         gbc.gridy = 0;
-//         dialog.add(typeLabel, gbc);
-//         gbc.gridx = 1;
-//         dialog.add(typeBox, gbc);
-
-//         gbc.gridx = 0;
-//         gbc.gridy = 1;
-//         dialog.add(widthLabel, gbc);
-//         gbc.gridx = 1;
-//         dialog.add(widthField, gbc);
-
-//         gbc.gridx = 0;
-//         gbc.gridy = 2;
-//         dialog.add(lengthLabel, gbc);
-//         gbc.gridx = 1;
-//         dialog.add(lengthField, gbc);
-
-//         gbc.gridx = 0;
-//         gbc.gridy = 3;
-//         gbc.gridwidth = 2;
-//         dialog.add(submitButton, gbc);
-
-//         // Add Room action
-//         submitButton.addActionListener(new ActionListener() {
-//             public void actionPerformed(ActionEvent e) {
-//                 try {
-//                     String selectedRoom = (String) typeBox.getSelectedItem();
-//                     int width = Integer.parseInt(widthField.getText());
-//                     int length = Integer.parseInt(lengthField.getText());
-
-//                     Color roomColor = getColorForRoomType(selectedRoom);
-//                     int pixelWidth = width * SCALE;
-//                     int pixelLength = length * SCALE;
-
-//                     if (nextX + pixelWidth > MAX_WIDTH) {
-//                         // Wrap to next row
-//                         nextX = 50;
-//                         nextY += pixelLength + GAP;
-//                     }
-
-//                     Room newRoom = new Room(selectedRoom, width, length, nextX, nextY, roomColor);
-//                     // 🧱 Check for collision before adding
-//                     if (drawingPanel.doesCollide(newRoom)) {
-//                         JOptionPane.showMessageDialog(dialog, "This room overlaps with an existing one.",
-//                                 "Collision Detected", JOptionPane.ERROR_MESSAGE);
-//                         return; // Don't add the room
-//                     }
-//                     nextX += pixelWidth + GAP;
-
-//                     // default position
-//                     drawingPanel.addRoom(newRoom);
-//                     dialog.dispose();
-//                 } catch (NumberFormatException ex) {
-//                     JOptionPane.showMessageDialog(dialog, "Please enter valid numbers.", "Input Error",
-//                             JOptionPane.ERROR_MESSAGE);
-//                 }
-//             }
-//         });
-
-//         dialog.setVisible(true);
-//     }
-
-   
-//     class DrawingPanel extends JPanel {
-//         private Room selectedRoom = null;
-//         private int offsetX, offsetY;
-
-//         private java.util.List<Room> rooms = new java.util.ArrayList<>();
-
-//         private boolean collidesWithOtherRooms(Room draggedRoom, int newX, int newY) {
-//             Rectangle newBounds = new Rectangle(newX, newY, draggedRoom.width * SCALE, draggedRoom.length * SCALE);
-//             for (Room other : rooms) {
-//                 if (other == draggedRoom)
-//                     continue; // Skip self
-//                 Rectangle otherBounds = new Rectangle(other.x, other.y, other.width * SCALE, other.length * SCALE);
-//                 if (newBounds.intersects(otherBounds)) {
-//                     return true;
-//                 }
-//             }
-//             return false;
-//         }
-
-//         public boolean doesCollide(Room newRoom) {
-//             Rectangle newRect = new Rectangle(newRoom.x, newRoom.y, newRoom.width * SCALE, newRoom.length * SCALE);
-//             for (Room room : rooms) {
-//                 Rectangle existingRect = new Rectangle(room.x, room.y, room.width * SCALE, room.length * SCALE);
-//                 if (newRect.intersects(existingRect)) {
-//                     return true; // Collision found
-//                 }
-//             }
-//             return false; // No collision
-//         }
-
-//         public DrawingPanel() {
-//             // Mouse Pressed: Check if a room is selected
-//             addMouseListener(new MouseAdapter() {
-//                 @Override
-//                 public void mousePressed(MouseEvent e) {
-//                     for (Room room : rooms) {
-//                         int roomX = room.x;
-//                         int roomY = room.y;
-//                         int roomW = room.width * SCALE;
-//                         int roomH = room.length * SCALE;
-
-//                         if (e.getX() >= roomX && e.getX() <= roomX + roomW &&
-//                                 e.getY() >= roomY && e.getY() <= roomY + roomH) {
-//                             selectedRoom = room;
-//                             offsetX = e.getX() - roomX;
-//                             offsetY = e.getY() - roomY;
-//                             break;
-//                         }
-//                     }
-//                 }
-
-//                 @Override
-//                 public void mouseReleased(MouseEvent e) {
-//                     selectedRoom = null;
-//                 }
-//             });
-
-//             // Mouse Dragged: Move the selected room
-//             addMouseMotionListener(new MouseMotionAdapter() {
-//                 @Override
-//                 public void mouseDragged(MouseEvent e) {
-//                     if (selectedRoom != null) {
-//                         int proposedX = e.getX() - offsetX;
-//                         int proposedY = e.getY() - offsetY;
-
-//                         // Only update position if it doesn't collide
-//                         if (!collidesWithOtherRooms(selectedRoom, proposedX, proposedY)) {
-//                             selectedRoom.x = proposedX;
-//                             selectedRoom.y = proposedY;
-//                             repaint();
-//                         }
-//                     }
-//                 }
-//             });
-
-//         }
-
-//         public void addRoom(Room room) {
-//             rooms.add(room);
-//             repaint();
-//         }
-
-//         @Override
-//         protected void paintComponent(Graphics g) {
-//             super.paintComponent(g);
-//             Graphics2D g2d = (Graphics2D) g;
-
-//             // Fill background
-//             g2d.setColor(new Color(45, 45, 45));
-//             g2d.fillRect(0, 0, getWidth(), getHeight());
-
-//             // Draw grid
-//             g2d.setColor(Color.WHITE);
-//             int gridSpacing = 20;
-//             for (int x = 0; x < getWidth(); x += gridSpacing) {
-//                 for (int y = 0; y < getHeight(); y += gridSpacing) {
-//                     g2d.fillRect(x, y, 1, 1);
-//                 }
-//             }
-
-//             // Draw rooms
-//             for (Room r : rooms) {
-//                 g2d.setColor(r.color); // room color
-//                 g2d.fillRect(r.x, r.y, r.width * SCALE, r.length * SCALE);
-
-//                 g2d.setColor(Color.WHITE); // outline and label
-//                 g2d.drawRect(r.x, r.y, r.width * SCALE, r.length * SCALE);
-//                 g2d.drawString(r.type + " (" + r.width + "x" + r.length + " ft)", r.x + 5, r.y + 15);
-//             }
-//         }
-//     }
-
-//     private Color getColorForRoomType(String type) {
-//         switch (type) {
-//             case "Bedroom":
-//                 return new Color(70, 130, 180); // Steel Blue
-//             case "Bathroom":
-//                 return new Color(100, 149, 237); // Cornflower Blue
-//             case "Living Room":
-//                 return new Color(60, 179, 113); // Medium Sea Green
-//             case "Kitchen":
-//                 return new Color(255, 165, 0); // Orange
-//             default:
-//                 return Color.GRAY; // Fallback color
-//         }
-//     }
-
-// }
-
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -340,6 +62,7 @@ public class MainPanel extends JPanel {
             public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".fpl");
             }
+
             public String getDescription() {
                 return "Floor Plan Files (*.fpl)";
             }
@@ -348,7 +71,8 @@ public class MainPanel extends JPanel {
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(lastFile))) {
                 oos.writeObject(drawingPanel.rooms);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(), "Save Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         } else {
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -360,7 +84,8 @@ public class MainPanel extends JPanel {
                     oos.writeObject(drawingPanel.rooms);
                     lastFile = file;
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage(), "Save Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -372,6 +97,7 @@ public class MainPanel extends JPanel {
             public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".fpl");
             }
+
             public String getDescription() {
                 return "Floor Plan Files (*.fpl)";
             }
@@ -397,7 +123,8 @@ public class MainPanel extends JPanel {
                     lastFile = file;
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "Error loading file: " + ex.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error loading file: " + ex.getMessage(), "Load Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -517,11 +244,14 @@ public class MainPanel extends JPanel {
 
         public void startRemoveRoom() {
             removeMode = true;
-            JOptionPane.showMessageDialog(this, "Click a room to remove it.", "Remove Room", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Click a room to remove it.", "Remove Room",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         private void removeRoom(Room room) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Remove " + room.type + " (" + room.width + "x" + room.length + " ft)?", "Confirm Removal", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Remove " + room.type + " (" + room.width + "x" + room.length + " ft)?", "Confirm Removal",
+                    JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 rooms.remove(room);
                 recalculateNextPosition();

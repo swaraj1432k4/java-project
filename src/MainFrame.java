@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class MainFrame {
     public static void main(String[] args) {
-        MainWindow obj=new MainWindow();
+        MainWindow obj = new MainWindow();
         obj.mainwindow();
     }
 
@@ -20,10 +20,10 @@ class MainWindow {
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      
-        MainPanel panel =new MainPanel();
-        frame.add(panel,BorderLayout.CENTER);
+
+        MainPanel panel = new MainPanel();
+        frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
-    
+
 }
