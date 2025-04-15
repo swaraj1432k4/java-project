@@ -49,7 +49,7 @@ public class MainPanel extends JPanel {
         JButton saveasButton = new JButton("Save As");
         JButton loadButton = new JButton("Load");
         JPanel buttonpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonpanel.setBackground(new Color(0, 0, 5));
+        buttonpanel.setBackground(new Color(50, 50, 50));
         stylebutton4(addroom);
         stylebutton2(removeRoom);
         stylebutton(saveButton);
