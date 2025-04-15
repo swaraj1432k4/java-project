@@ -19,6 +19,27 @@ public class MainPanel extends JPanel {
         button.setFocusPainted(false);
     }
 
+    private void stylebutton2(JButton button) {
+        button.setBackground(new Color(125, 45, 45));
+        button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+    }
+
+    private void stylebutton3(JButton button) {
+        button.setBackground(new Color(5, 5, 100));
+        button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+    }
+
+    private void stylebutton4(JButton button) {
+        button.setBackground(new Color(50, 200, 50));
+        button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+    }
+
     public MainPanel() {
         setLayout(new BorderLayout());
 
@@ -28,12 +49,12 @@ public class MainPanel extends JPanel {
         JButton saveasButton = new JButton("Save As");
         JButton loadButton = new JButton("Load");
         JPanel buttonpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonpanel.setBackground(new Color(30, 30, 30));
-        stylebutton(addroom);
-        stylebutton(removeRoom);
+        buttonpanel.setBackground(new Color(0, 0, 5));
+        stylebutton4(addroom);
+        stylebutton2(removeRoom);
         stylebutton(saveButton);
         stylebutton(saveasButton);
-        stylebutton(loadButton);
+        stylebutton3(loadButton);
         buttonpanel.add(addroom);
         buttonpanel.add(removeRoom);
         buttonpanel.add(saveButton);
